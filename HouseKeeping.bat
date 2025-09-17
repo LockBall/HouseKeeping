@@ -1,6 +1,29 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: Initialize flag
+set username_found=false
+
+:: Read config.cfg line by line
+for /f "tokens=1,2 delims== eol=#" %%A in (config.cfg) do (
+    if not "%%A"=="" (
+        set %%A=%%B
+        if /i "%%A"=="username" (
+            set username_found=true
+        )
+    )
+)
+
+:: Validate that username was found
+if /i "%username_found%"=="false" (
+    echo [ERROR] Username not found in config.cfg
+    exit /b 1
+)
+
+:: Use the imported username
+echo Username from config: %username%
+
+
 :: Stop services that may lock temp files
 echo Stopping MS Office ClickToRunSvc
 sc stop ClickToRunSvc
@@ -10,9 +33,9 @@ sc stop InstallService
 
 :: Define list of folders to clean
 set folder_list=^
-"C:\Users\D00D\AppData\Local\Temp" ^
+"C:\Users\%username%\AppData\Local\Temp" ^
 "C:\Windows\Temp" ^
-"C:\Users\D00D\AppData\Local\Spotify\Storage"
+"C:\Users\%username%\AppData\Local\Spotify\Storage"
 
 echo Starting cleanup for multiple folders...
 echo.

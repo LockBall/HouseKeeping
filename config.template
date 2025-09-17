@@ -1,0 +1,5 @@
+# use copy named config.cfg and replace <var_iables> including <>
+# avoid spaces around =
+
+username=<your_username>
+
