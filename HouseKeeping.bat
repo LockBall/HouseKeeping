@@ -1,63 +1,71 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: required to delete some temp files
-echo Stopping MS Office ClikToRunSvc
+:: Stop services that may lock temp files
+echo Stopping MS Office ClickToRunSvc
 sc stop ClickToRunSvc
 
 echo Stopping MS Store Install Service
 sc stop InstallService
 
-
 :: Define list of folders to clean
-set "folderList="C:\Users\D00D\AppData\Local\Temp" "C:\Windows\Temp""
-
+set folder_list=^
+"C:\Users\D00D\AppData\Local\Temp" ^
+"C:\Windows\Temp" ^
+"C:\Users\D00D\AppData\Local\Spotify\Storage"
 
 echo Starting cleanup for multiple folders...
 echo.
 
-for %%F in (%folderList%) do (
-    set "currentFolder=%%F"
-    set "lockedCount=0"
-    set "initialSizeBytes=0"
-    set "finalSizeBytes=0"
+for %%F in (%folder_list%) do (
+    set "current_folder=%%~F"
+    set "locked_count=0"
+    set "deleted_count=0"
+    set "initial_size_bytes=0"
+    set "final_size_bytes=0"
 
-    echo Cleaning: !currentFolder!
+    echo Cleaning: !current_folder!
 
     :: Get initial size in bytes
-    for /f "tokens=1,2,3,4 delims= " %%A in ('dir /s /a "!currentFolder!" ^| find "File(s)"') do (
-    set "initialSizeBytes=%%D"
+    for /f "tokens=1,2,3,4 delims= " %%A in ('dir /s /a "!current_folder!" ^| find "File(s)"') do (
+        set "initial_size_bytes=%%D"
     )
 
-
     :: Delete files and count locked ones
-    for %%X in ("!currentFolder!\*.*") do (
+    for %%X in ("!current_folder!\*.*") do (
+        set /a deleted_count+=1
         del /q /f "%%X" 2>nul
         if exist "%%X" (
-            set /a lockedCount+=1
+            set /a locked_count+=1
         )
     )
 
     :: Delete folders and count locked ones
-    for /d %%D in ("!currentFolder!\*") do (
+    for /d %%D in ("!current_folder!\*") do (
+        set /a deleted_count+=1
         rd /s /q "%%D" 2>nul
         if exist "%%D" (
-            set /a lockedCount+=1
+            set /a locked_count+=1
         )
     )
 
     :: Get final size in bytes
-    for /f "tokens=1,2,3,4 delims= " %%A in ('dir /s /a "!currentFolder!" ^| find "File(s)"') do (
-    set "finalSizeBytes=%%D"
+    for /f "tokens=1,2,3,4 delims= " %%A in ('dir /s /a "!current_folder!" ^| find "File(s)"') do (
+        set "final_size_bytes=%%D"
     )
 
     :: Convert bytes to MB (rounded down)
-    set /a initialSizeMB=!initialSizeBytes!/1048576
-    set /a finalSizeMB=!finalSizeBytes!/1048576
+    set /a initial_size_MB=!initial_size_bytes!/1048576
+    set /a final_size_MB=!final_size_bytes!/1048576
 
-    echo Initial size: !initialSizeMB! MB
-    echo Final size:   !finalSizeMB! MB
-    echo Locked items skipped: !lockedCount!
+    :: Calculate successful deletions
+    set /a successful_deletes=!deleted_count!-!locked_count!
+
+    echo Initial size:         !initial_size_MB! MB
+    echo Final size:           !final_size_MB! MB
+    echo Files attempted:      !deleted_count!
+    echo Locked items skipped: !locked_count!
+    echo Successfully deleted: !successful_deletes!
     echo -------------------------------
 )
 
