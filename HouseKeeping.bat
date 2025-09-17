@@ -70,5 +70,7 @@ for %%F in (%folder_list%) do (
 )
 
 echo All folders processed.
+echo manually check C:\ProgramData\
+echo Remember to run Disk Cleanup including system files.
 echo Press any key to exit...
 pause >nul
