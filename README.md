@@ -4,6 +4,11 @@ other places of interest
 C:\ProgramData\NVIDIA Corporation\Downloader\xxRANDOMxx  
 
 
+## FireWaterFox Profile Backup
+``C:\Users\<YourUser>\AppData\Roaming\Waterfox\Profiles\<random>.default``
+
+---
+
 ##  Reboot Cmds
 
 **Bios**  
