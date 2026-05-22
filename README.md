@@ -4,7 +4,10 @@ other places of interest
 C:\ProgramData\NVIDIA Corporation\Downloader\xxRANDOMxx  
 
 
-## FireWaterFox Profile Backup
+## FireWaterFox Profile Backup'
+1. close firefox  
+1. go to this location
+1. zip the ``bnoujqjh.default-release.zip`` or similar folder  
 ``C:\Users\<YourUser>\AppData\Roaming\Waterfox\Profiles\<random>.default``
 
 ---
