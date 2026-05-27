@@ -48,4 +48,4 @@ delete the conents of ``DetectionHistory``
 ---
 
 ## remove refresh git contributor
-after having an agent clean the repo, commits, etc. an agent name remained on the contributors sidebar but not in the contributors details. changing the name of the repo from main fixed this. then change name back to main.
+after having an agent clean the repo, commits, etc. an agent name remained on the contributors sidebar but not in the contributors details. changing the name of the repo branch from main fixed this. then change name back to main.
